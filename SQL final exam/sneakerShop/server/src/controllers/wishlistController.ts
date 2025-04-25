@@ -4,10 +4,16 @@ import { pool } from '../db';
 export const getWishlist = async (_req: Request, res: Response) => {
   try {
     const [rows] = await pool.query(`
-      SELECT Wishlist.wishID, Users.name, Sneakers.model, Wishlist.date_added
-      FROM Wishlist
-      JOIN Users ON Wishlist.userID = Users.userID
-      JOIN Sneakers ON Wishlist.snkID = Sneakers.snkID
+      SELECT 
+        Wishlist.wishID, 
+        Wishlist.userID,
+        Wishlist.snkID,
+        Wishlist.date_added,
+        Users.name,
+        Wishlist.image_url
+      FROM wishlist
+      JOIN Users ON wishlist.userID = Users.userID
+      JOIN Sneakers ON wishlist.snkID = Sneakers.snkID
     `);
     res.json(rows);
   } catch (error) {
@@ -16,11 +22,11 @@ export const getWishlist = async (_req: Request, res: Response) => {
 };
 
 export const addToWishlist = async (req: Request, res: Response) => {
-  const { userID, snkID, date_added } = req.body;
+  const { userID, snkID, date_added , image_url} = req.body;
   try {
     const [result] = await pool.query(
-      'INSERT INTO Wishlist (userID, snkID, date_added) VALUES (?, ?, ?)',
-      [userID, snkID, date_added]
+      'INSERT INTO Wishlist (userID, snkID, date_added,image_url) VALUES (?, ?, ?)',
+      [userID, snkID, date_added,image_url]
     );
     res.status(201).json({ message: 'Item added to wishlist', wishID: (result as any).insertId });
   } catch (error) {
