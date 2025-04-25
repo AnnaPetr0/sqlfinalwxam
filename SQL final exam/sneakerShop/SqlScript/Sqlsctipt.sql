@@ -1,5 +1,50 @@
--- Step 1: Create the database
+CREATE DATABASE IF NOT EXISTS sneaker_shop;
 USE sneaker_shop;
+
+CREATE TABLE Users (
+    userID INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(100)
+);
+
+CREATE TABLE Sneakers (
+    snkID INT AUTO_INCREMENT PRIMARY KEY,
+    brand VARCHAR(50),
+    model VARCHAR(50),
+    size INT,
+    price DECIMAL(10,2),
+    image_URL TEXT,
+    description TEXT
+);
+
+CREATE TABLE Wishlist (
+    wishID INT AUTO_INCREMENT PRIMARY KEY,
+    userID INT,
+    snkID INT,
+    date_added DATE,
+    FOREIGN KEY (userID) REFERENCES Users(userID),
+    FOREIGN KEY (snkID) REFERENCES Sneakers(snkID)
+);
+
+CREATE TABLE Orders (
+    orderID INT AUTO_INCREMENT PRIMARY KEY,
+    userID INT,
+    order_date DATE,
+    total_price DECIMAL(10,2),
+    FOREIGN KEY (userID) REFERENCES Users(userID)
+);
+
+CREATE TABLE OrderItems (
+    ordItemID INT AUTO_INCREMENT PRIMARY KEY,
+    orderID INT,
+    snkID INT,
+    quantity INT,
+    unit_price DECIMAL(10,2),
+    FOREIGN KEY (orderID) REFERENCES Orders(orderID),
+    FOREIGN KEY (snkID) REFERENCES Sneakers(snkID)
+);
+
 
 
 
